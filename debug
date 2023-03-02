@@ -1,0 +1,83 @@
+function love.load()
+	Object = require "classic"
+	require "entity"
+	require "player"
+	require "block"
+	require "ground"
+
+	groundLevel = love.graphics.getHeight() - 50
+	gravAcceleration = 1700
+
+	entities = {}
+
+	ground = Ground()
+
+	player = Player(
+		0, -- x0
+		0, -- y0
+		'player.png', -- imagePath
+		500, -- maxSpeedX
+		1000, -- acceleration
+		1000 -- jumpSpeed
+		)
+
+	block = Block(300, 0)
+	block2 = Block(400, groundLevel - 50)
+
+	table.insert(entities, ground)
+	table.insert(entities, player)
+	table.insert(entities, block)
+	table.insert(entities, block2)
+
+end
+
+function love.keypressed(key)
+	if key == "space" then
+		player.speedY = -player.jumpSpeed
+	end
+end
+
+function debugPrintCmd()
+	print('--------------------------------')
+	print('player.x:' .. tostring(player.x))
+	print('player.y:' .. tostring(player.y))
+	print('player.lastY:' .. tostring(player.lastY))
+	print('player.lastFeet:' .. tostring(player.lastY + player.height))
+	print('player.lastX:' .. tostring(player.lastX))
+	print('player.lastRight:' .. tostring(player.lastX + player.width))
+	print('block2.x' .. tostring(block2.x))
+	print('block2.y' .. tostring(block2.y))
+	print('block2.feet' .. tostring(block2.y + block2.height))
+	print('block2.right' .. tostring(block2.x + block2.width))
+	print('player.speedX:' .. tostring(player.speedX))
+	print('player.speedY:' .. tostring(player.speedY))
+	print('player bottom:' .. tostring(player.y + player.height))
+	print('player right:' .. tostring(player.x + player.width))
+	print('player.groundedOnObj:' .. tostring(player.groundedOnObj))
+end
+
+function debugPrintInGame()
+	love.graphics.print('player.x:' .. tostring(player.x), 0, 0)
+	love.graphics.print('player.y:' .. tostring(player.y), 0, 20)
+	love.graphics.print('player.speedX:' .. tostring(player.speedX), 0, 30)
+	love.graphics.print('player.speedY:' .. tostring(player.speedY), 0, 40)
+	love.graphics.print('player bottom:' .. tostring(player.y + player.height),0 , 50)
+	love.graphics.print('player right:' .. tostring(player.x + player.width), 0, 60)
+	love.graphics.print('player.groundedOnObj:' .. tostring(player.groundedOnObj), 0, 70)
+end
+
+function love.update(dt)
+	for i, entity in ipairs(entities) do
+		entity:update(dt)
+	end
+
+	debugPrintCmd()
+end
+
+function love.draw()
+	for i, entity in ipairs(entities) do
+		entity:draw()
+	end
+
+	debugPrintInGame()
+end
