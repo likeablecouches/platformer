@@ -53,8 +53,8 @@ function love.load()
 
 	scalingPassages = {}
 
-	table.insert(scalingPassages, scalingPassage(100, 200, 0.3, 1))
-	table.insert(scalingPassages, scalingPassage(400, 200, 2, 0.3))
+	table.insert(scalingPassages, scalingPassage(100, 200, 1, 0.3))
+	table.insert(scalingPassages, scalingPassage(600, 200, 0.3, 2))
 
 end
 
@@ -89,24 +89,23 @@ function debugPrintCmd()
 	print('player right:' .. tostring(player.x + player.width))
 	print('player.groundedOnObj:' .. tostring(player.groundedOnObj))
 	print('canvasScaleY:' .. tostring(canvasScaleY))
-	print('player.currentScalingPassage:' .. tostring(player.currentScalingPassage))
 	print('scalingPassages[1].initialZoomRatio:' .. tostring(scalingPassages[1].initialZoomRatio))
 end
 
 function debugPrintInGame()
-	love.graphics.print('player.x:' .. tostring(player.x), -cameraOffsetX, 0 - cameraOffsetY)
-	love.graphics.print('player.y:' .. tostring(player.y), -cameraOffsetX, 20 - cameraOffsetY)
-	love.graphics.print('player.speedX:' .. tostring(player.speedX), -cameraOffsetX, 30 - cameraOffsetY)
-	love.graphics.print('player.speedY:' .. tostring(player.speedY), -cameraOffsetX, 40 - cameraOffsetY)
-	love.graphics.print('player bottom:' .. tostring(player.y + player.height), -cameraOffsetX, 50 - cameraOffsetY)
-	love.graphics.print('player right:' .. tostring(player.x + player.width), -cameraOffsetX, 60 - cameraOffsetY)
-	love.graphics.print('player.groundedOnObj:' .. tostring(player.groundedOnObj), -cameraOffsetX, 70 - cameraOffsetY)
-	love.graphics.print('canvasScaleX' .. tostring(canvasScaleX), -cameraOffsetX, 80 - cameraOffsetY)
+	love.graphics.print('player.x:' .. tostring(player.x), 0, 0)
+	love.graphics.print('player.y:' .. tostring(player.y), 0,20)
+	love.graphics.print('player.speedX:' .. tostring(player.speedX), 0, 30)
+	love.graphics.print('player.speedY:' .. tostring(player.speedY), 0, 40)
+	love.graphics.print('player bottom:' .. tostring(player.y + player.height), 0, 50)
+	love.graphics.print('player right:' .. tostring(player.x + player.width), 0, 60)
+	love.graphics.print('player.groundedOnObj:' .. tostring(player.groundedOnObj), 0, 70)
+	love.graphics.print('canvasScaleX' .. tostring(canvasScaleX), 0, 80)
 end
 
 function updateScales(passage)
 	if not player:checkCollision(passage) then
-		passage.entryDirection = nil
+		passage.entrySide = nil
 
 		if player.currentScalingPassage == passage then
 			player.currentScalingPassage = nil
@@ -117,41 +116,37 @@ function updateScales(passage)
 		return
 	end
 
-	if not passage.entryDirection then
-		if player.x + player.width/2 < passage.x + passage.width/2  then
-			passage.entryDirection = 'left'
-			passage.zoomIndex = 2
-		else
-			passage.entryDirection = 'right'
-			passage.zoomIndex = 1
-		end
-
-	end
-
-	if passage.entryDirection == 'left' then
-		displacement = player.x + player.width - passage.x
-	else
-		displacement = player.x - passage.x
-	end
-
-
 	if not player.currentScalingPassage then
+ 		-- if the player has just entered the scaling region
 		player.currentScalingPassage = passage
 		passage.initialZoomRatio = canvasScaleX
-		passage.finalZoomRatio = passage.finalZoomRatios[passage.zoomIndex]
+
+		passage:detectEntrySide(player)
+
+		if passage.entrySide == "left" then
+			passage.finalZoomIndex = 2
+		else
+			passage.finalZoomIndex = 1
+		end
+
+		passage.finalZoomRatio = passage.finalZoomRatios[passage.finalZoomIndex]
+		scaleRate = (passage.finalZoomRatio - passage.initialZoomRatio) / passage.width
 	end
 
-	local scaleRate = (passage.finalZoomRatio - passage.initialZoomRatio) / passage.width
-
-	if displacement > passage.width then
-		totalScale = passage.finalZoomRatio
-
+	if passage.entrySide == 'left' then
+		distFromEntry = player.x + player.width - passage.x
 	else
-		totalScale = passage.initialZoomRatio + displacement * scaleRate
+		distFromEntry = passage.x + passage.width - player.x
+	end
+
+	if distFromEntry > passage.width then
+		totalScale = passage.finalZoomRatio
+	else
+		totalScale = passage.initialZoomRatio + distFromEntry * scaleRate
 	end
 
 	canvasScaleX = totalScale
-	canvasScaleY  = totalScale
+	canvasScaleY = totalScale
 end
 
 function love.update(dt)
@@ -183,5 +178,5 @@ function love.draw(dt)
 
 	love.graphics.scale(1, 1)
 
-	debugPrintInGame()
+	-- debugPrintInGame()
 end

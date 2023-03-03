@@ -4,8 +4,8 @@ scalingPassage = Entity:extend()
 function scalingPassage:new(
 	x,
 	width,
-	finalZoomRatioRight,
-	finalZoomRatioLeft) -- 1 for in and -1 for out
+	finalZoomRatioLeft,
+	finalZoomRatioRight)
 
 	self.height = 10^10
 	self.finalZoomRatios = {finalZoomRatioLeft, finalZoomRatioRight}
@@ -14,10 +14,18 @@ function scalingPassage:new(
 	self.initialZoomRatio = nil
 	self.finalZoomRatio = nil
 
-	self.entryDirection = nil
+	self.entrySide = nil
 
 	scalingPassage.super.new(self, x, -self.height / 2, self.height, width)
 
+end
+
+function scalingPassage:detectEntrySide(obj)
+	if obj.x + obj.width/2 < self.x + self.width/2  then
+		self.entrySide = 'left'
+	else
+		self.entrySide	= 'right'
+	end
 end
 
 function scalingPassage:draw()
