@@ -1,12 +1,17 @@
 require "entity"
 Block = Entity:extend()
 
-function Block:new(x, y)
+sideLength = 50
+
+function Block:new(x, y, row, column)
 	Block.super.new(self,
 		x,
 		y,
-		50,
-		50)
+		sideLength,
+		sideLength)
+
+	self.gridPosX = column
+	self.gridPosY = row
 end
 
 function Block:update()

@@ -1,0 +1,29 @@
+- hash method:
+	A map/hash object will be a 2-d array, each position either a 0 or 1. 0
+	indicates empty space, 1 indicates a block to be placed at the coordinates
+	correspoinding the position in the 2-d array. When the game loads, block
+	entities will be created based on their positions in the hash. The hash is
+	created from a list of raw strings, raw_hash, that will be processed into a
+	proper 2d array. raw_hash will be a list of strings all of equal length,
+	and each character will either be a 0 or 1. The originating coordiantes(in
+	game coords) will be 0,0.
+
+	hash variables:
+	- raw matrix
+	- 2d array
+
+	hash methods:
+	- createBlocks()
+
+- block
+	A square entity implemented the the hash. If applicable, a block will have
+	an attribute that represents which quad it will use for it's image. Each
+	block will have coorindates that represent the position within the hash.
+	These coordinates will be used to determine the coordinates at which the
+	block is drawn at.
+
+	block variable members:
+	- x y coords(on screen)
+	- x y coords(in hash)
+	- side length(constant for all blocks)
+	- quad code(mayabe)

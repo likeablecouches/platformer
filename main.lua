@@ -6,10 +6,11 @@ function love.load()
 	require "block"
 	require "ground" 
 	require "scalingPassage"
+	require "gridHash"
 
 	require "functions"
 
-	groundLevel = love.graphics.getHeight() - 50
+	groundLevel = 300
 
 	windowWidth = love.graphics.getWidth() * 1.5
 	windowHeight = love.graphics.getHeight() * 1.2
@@ -34,7 +35,7 @@ function love.load()
 	ground = Ground()
 
 	player = Player(
-		0, -- x0
+		100, -- x0
 		groundLevel - 100, -- y0
 		'player.png', -- imagePath
 		500, -- maxSpeedX
@@ -42,7 +43,7 @@ function love.load()
 		700 -- jumpSpeed
 		)
 
-	block = Block(300, 300)
+--	block = Block(400, 300)
 --	block2 = Block(400, groundLevel - 50)
 --	block3 = Block(400, groundLevel - 120)
 --	block4 = Block(400, groundLevel - 180)
@@ -55,6 +56,21 @@ function love.load()
 
 	table.insert(scalingPassages, scalingPassage(100, 200, 1, 0.3))
 	table.insert(scalingPassages, scalingPassage(600, 200, 0.3, 2))
+
+
+	rawHash = {
+
+	'1000000000000000000000000000',
+	'1000000000000000000000000000',
+	'1000000000000000000000000000',
+	'1000000000000000000000000000',
+	'1000000000000000000000000000',
+	'1000000000000000000000000000'
+
+	}
+
+	grid = GridHash(rawHash)
+	grid:createBlocks(entities)
 
 end
 
