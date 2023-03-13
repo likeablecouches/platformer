@@ -10,7 +10,7 @@ function love.load()
 
 	require "functions"
 
-	groundLevel = 300
+	groundLevel = 600
 
 	windowWidth = love.graphics.getWidth() * 1.5
 	windowHeight = love.graphics.getHeight() * 1.2
@@ -54,22 +54,29 @@ function love.load()
 
 	scalingPassages = {}
 
-	table.insert(scalingPassages, scalingPassage(100, 200, 1, 0.3))
-	table.insert(scalingPassages, scalingPassage(600, 200, 0.3, 2))
+	-- table.insert(scalingPassages, scalingPassage(100, 200, 1, 0.3))
+	-- table.insert(scalingPassages, scalingPassage(600, 200, 0.3, 2))
 
 
 	rawHash = {
 
-	'1000000000000000000000000000',
-	'1000000000000000000000000000',
-	'1000000000000000000000000000',
-	'1000000000000000000000000000',
-	'1000000000000000000000000000',
-	'1000000000000000000000000000'
+	'0000000000000000000000000000',
+	'0000000000000000000000000000',
+	'0000000000000000000000000000',
+	'0000000000000000000000000000',
+	'0000000000000000000000000000',
+	'0000000000000000000000000000',
+	'0000001111100001111000000000',
+	'0000011111100000000000000000',
+	'0000000000000000000000000000',
+	'0000000000000000000000000000',
+	'0000000000000000000000000000',
+	'0000000000000000000000000000'
 
 	}
 
 	grid = GridHash(rawHash)
+
 	grid:createBlocks(entities)
 
 end
@@ -105,7 +112,6 @@ function debugPrintCmd()
 	print('player right:' .. tostring(player.x + player.width))
 	print('player.groundedOnObj:' .. tostring(player.groundedOnObj))
 	print('canvasScaleY:' .. tostring(canvasScaleY))
-	print('scalingPassages[1].initialZoomRatio:' .. tostring(scalingPassages[1].initialZoomRatio))
 end
 
 function debugPrintInGame()
@@ -177,6 +183,16 @@ function love.update(dt)
 	cameraOffsetX = windowWidth / 2 - canvasScaleX * (player.x + player.width / 2)
     cameraOffsetY = windowHeight / 2 - canvasScaleY * (player.y + player.height / 2)
 
+	local zoomScaler = 0.01
+
+	if love.keyboard.isDown('j') then
+		canvasScaleX = canvasScaleX + zoomScaler
+		canvasScaleY = canvasScaleY + zoomScaler
+	elseif love.keyboard.isDown('k') then
+		canvasScaleX = canvasScaleX - zoomScaler
+		canvasScaleY = canvasScaleY - zoomScaler
+	end
+
 	debugPrintCmd()
 end
 
@@ -192,7 +208,10 @@ function love.draw(dt)
 		scalingPassage:draw()
 	end
 
+	grid:draw()
+
 	love.graphics.scale(1, 1)
 
 	-- debugPrintInGame()
+	
 end

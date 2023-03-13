@@ -23,16 +23,19 @@ function GridHash:new(matrix)
 	for i, line in ipairs(self.rawMatrix) do
 		table.insert(self.twoDArray, stringToList(line))
 	end
+
+	self.width = sideLength * #self.twoDArray[1]
+	self.height = sideLength * #self.twoDArray
 end
 
 function GridHash:createBlock(entityList, gridPosX, gridPosY)
 	if self.twoDArray[gridPosY][gridPosX] == 0 then return end
 
-	blockXCoord = (gridPosX - 1) * sideLength
-	blockYCoord = (gridPosY - 1) * sideLength
+	blockXCoord = (gridPosX - 1) * 50
+	blockYCoord = (gridPosY - 1) * 50
 
-	newBlock = Block(blockXCoord, blockXCoord, j, i)
-	print(blockXCoord, blockYCoord)
+	newBlock = Block(blockXCoord, blockYCoord, j, i)
+	print('x: ', newBlock.x, 'y: ', newBlock.y, 'gridPosX: ', gridPosX, 'gridPosY: ', gridPosY)
 
 	table.insert(entityList, newBlock)
 end
@@ -45,4 +48,10 @@ function GridHash:createBlocks(entityList)
 		end
 	end
 
+end
+
+function GridHash:draw()
+	love.graphics.setColor({1, 0, 0})
+	love.graphics.rectangle('line', 0, 0, self.width, self.height)
+	love.graphics.setColor({1, 1, 1})
 end
