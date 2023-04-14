@@ -26,8 +26,8 @@ function Enemy:update(dt)
 	-- 	self.speed = -self.speed
 	-- end
 
-	self.x = self.x + self.speed * dt
-	self.mouthX = self.mouthX + self.speed * dt
+	-- self.x = self.x + self.speed * dt
+	-- self.mouthX = self.mouthX + self.speed * dt
 
 	fireAngleRad = math.atan2(self.mouthY - player.y, player.x - self.mouthX)
 	fireAngleDeg = fireAngleRad * 180 / math.pi

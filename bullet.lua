@@ -37,6 +37,12 @@ function Bullet:checkCollision(object)
 		and self.y < object.y + object.height
 end
 
+function Bullet:checkGlobalCollision()
+	for i, entity in ipairs(entities) do
+		if self:checkCollision(entity) then return true end
+	end
+end
+
 function Bullet:update(dt)
 	self.x = self.x + self.speed * self.cos * dt
 	self.y = self.y + self.speed * self.sin * dt
@@ -62,7 +68,8 @@ function Bullet:update(dt)
 
 	if self.y > love.graphics.getHeight()
 		or self.x < 0
-		or self.x > love.graphics.getWidth() then
+		or self.x > love.graphics.getWidth()
+		or self:checkGlobalCollision() then
 
 		self.dead = true
 	end
