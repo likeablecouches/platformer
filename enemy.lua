@@ -13,8 +13,8 @@ function Enemy:new(x, y, speed, bulletSpread)
 	self.speed = speed
 
 	self.fWait = 1
-	self.bulletsPerSecond = 40
-	self.bulletSpeed = 1000
+	self.bulletsPerSecond = 3
+	self.bulletSpeed = 2000
 	-- bulletSpread exptected as a magnitude of radians per each side
 	self.bulletSpread = bulletSpread
 
